@@ -16,7 +16,15 @@
     <th:block th:replace="header :: top"></th:block>
         <!-- 앞이 파일 명, 뒤가 fragment로 지정한 이름임-->
         <div id="main">
-
+            <div id="detailBox" th:object="${boardDto}">
+                <div>작성자 : <span th:text="*{writer}"</span></div>
+                <div>제목 : <span th:text="*{title}"></span>></div>
+                <div>내용 : <span th:text="*{content}"></span></div>
+            </div>
+            <div>
+                <a th:href="'/community/update?id=' +*{boardId}">수정</a>
+                <a th:href="'/community/delete?id=' +*{boardId}">삭제</a>
+            </div>
         </div>
 
 </div>

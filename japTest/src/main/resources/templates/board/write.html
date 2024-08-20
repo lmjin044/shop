@@ -16,7 +16,16 @@
     <th:block th:replace="header :: top"></th:block>
         <!-- 앞이 파일 명, 뒤가 fragment로 지정한 이름임-->
         <div id="main">
+            <h1>커뮤니티 글 작성</h1>
+            <form method="get" action="/community/writeSave" th:object="${boardDto}">
+                <div id="formData">
+                    작성자 : <input type="text" th:field="*{writer}"> <br>
+                    제목 : <input type="text" th:field="*{title}"> <br>
+                    내용 : <textarea th:field="*{content}"></textarea>
+                </div>
+                <button>작성</button>
 
+            </form>
         </div>
 
 </div>

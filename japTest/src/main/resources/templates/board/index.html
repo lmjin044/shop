@@ -16,7 +16,25 @@
     <th:block th:replace="header :: top"></th:block>
         <!-- 앞이 파일 명, 뒤가 fragment로 지정한 이름임-->
         <div id="main">
-
+            <h1>커뮤니티</h1>
+            <div id="writeBt">
+                <a href="/community/write">글작성</a>
+            </div>
+            <div id="listBox">
+                <table id="listTable">
+                    <tr>
+                        <th class="num">번호</th>
+                        <th class="title">제목</th>
+                    </tr>
+                    <tr th:each="row : ${boardListDto}">
+                        <td class="num" th:text="${row.id}"></td>
+                        <td class="title">
+                            <a th:href="'/community/detail?id='+${row.id}"
+                               th:text="${row.title}"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
 
 </div>
