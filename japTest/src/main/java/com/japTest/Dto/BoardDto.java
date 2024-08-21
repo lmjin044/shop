@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 public class BoardDto {
-    private String id;
+    private int id;
 
     @NotBlank (message="작성자명을 입력해주세요.")
     private String writer;
@@ -24,6 +24,13 @@ public class BoardDto {
     private String content;
 
     private static ModelMapper modelMapper = new ModelMapper();
+
+    //Board(Entity) > boardDto(dto)로 저장
+    public static BoardDto of(Board board){
+        return modelMapper.map(board, BoardDto.class);
+    }
+
+
     public Board createBoard(){
         return modelMapper.map(this, Board.class);
         //조건 : 변수 이름이 같아야만 가능

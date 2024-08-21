@@ -15,6 +15,8 @@ public class BoardListDto {
         BoardListDto boardListDto = new BoardListDto();
         boardListDto.setId(board.getId());
         boardListDto.setTitle(board.getTitle());
+
+        return boardListDto;
     }
 }
 

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -45,5 +46,31 @@ public class BoardController {
         return "redirect:/community";
     }
 
+    //상세페이지 보기 요청
+    @GetMapping("/community/detail")
+    public String detail(@RequestParam("id") int id, Model model){
+        BoardDto boardDto = boardService.getBoard(id);
+        model.addAttribute("boardDto", boardDto);
+            //detail에서 boardDto라는 이름으로 받기로 결정했으므로 ""안은 동일하게 유지
+        return "board/detail";
+    }
+
+    //글 삭제하는 방법
+    @GetMapping("/community/delete")
+    public String delete(@RequestParam("id") int id){
+        boardService.boardDelete(id);
+        return "redirect:/community";
+            //삭제 했으면 글 목록으로 돌아가기
+    }
+
+    //글 수정하는 방법
+    @GetMapping("/community/update")
+    public String update(@RequestParam("id") int id, Model model){
+
+        BoardDto boardDto = boardService.getBoard(id);
+        model.addAttribute("boardDto", boardDto);
+
+        return "board/write";
+    }
 
 }

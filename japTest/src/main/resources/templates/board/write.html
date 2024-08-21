@@ -18,6 +18,7 @@
         <div id="main">
             <h1>커뮤니티 글 작성</h1>
             <form method="get" action="/community/writeSave" th:object="${boardDto}">
+                <input type="hidden" th:field="*{id}">
                 <div id="formData">
                     작성자 : <input type="text" th:field="*{writer}"> <br>
                     제목 : <input type="text" th:field="*{title}"> <br>

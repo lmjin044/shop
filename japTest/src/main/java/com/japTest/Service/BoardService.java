@@ -30,10 +30,42 @@ public class BoardService {
     }
 
     public void save(@Valid BoardDto boardDto) {
-        //DB저장 할 수 있도록 DAO클래스의 메서드를 호출하기
-        Board board = boardDto.createBoard();
+//        if(boardDto.getId() ==0) {
+            //DB저장 할 수 있도록 DAO클래스의 메서드를 호출하기
+            Board board = boardDto.createBoard();
             //1. Dto 객체를 Entity 객체로 저장
-        boardRepository.save(board);
+            boardRepository.save(board);
             //2.JAP 메서드 호출하기 = repository 호출하기(interface 형성 필요)
+//        }else {
+//            Board board = boardRepository.findById(boardDto.getId()).orElse(null);
+//            board.setWriter(board.getWriter());
+//            board.setContent(boardDto.getContent());
+//            board.setTitle(boardDto.getTitle());
+//
+//
+//        }
     }
+
+    public BoardDto getBoard(int id) {
+        //1.DB 조회 후 해당 테이블의 데이터 받아오기
+        Board board = boardRepository.findById(id).orElse(new Board());
+            //null값 오류 : 가장 많이 발생하는 오류 = null값인지 아닌지를 검사해야 함.
+            //  처리 방법 : if(xxx!=null)과 같은 if문 사용 혹은 try-catch 방식
+            // ★optional : null값 체크하는 새로운 방법.
+            //              NullPointException(NPE)오류가 발생하지 않도록 돕는 방식.
+            // 무조건 .get()을 사용하면 null값을 보낼 수도 있어서 문제 발생 가능
+            // 그러나 .get() 과 optional을 동시에 쓰면 오류가 날 수 있으니까 둘 중 하나만 써야 한다.
+        //2. DB에서 조회한 결과를 DTO로 변환
+        BoardDto boardDto = BoardDto.of(board);
+        return boardDto;
+    }
+
+    //글 삭제하기
+    public void boardDelete(int id) {
+        Board board = boardRepository.findById(id).orElse(null);
+        //=조회된 값이 없으면 null로 지정하여 삭제가 안 되게 만들 것.
+        boardRepository.delete(board);
+    }
+
+
 }
