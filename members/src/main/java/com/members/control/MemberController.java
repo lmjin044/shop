@@ -4,11 +4,11 @@ import com.members.Dto.MemberDto;
 import com.members.Dto.MemberLoginDto;
 import com.members.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,46 +20,46 @@ public class MemberController {
 
     //회원가입 페이지 요청
     @GetMapping("/signUp")
-    public String signIn(Model model){
-        model.addAttribute("memberDto", new MemberDto());
+    public String 회원가입페이지(Model model){
+        model.addAttribute("memberDto" , new MemberDto());
         return "member/signUp";
     }
 
     //회원가입 요청
-    @PostMapping ("/signUp")
-    public String signUp(MemberDto memberDto){
+    @PostMapping("/signUp")
+    public String 회원가입( MemberDto memberDto){
 
-         memberService.signUpSave(memberDto);
+        memberService.회원가입저장(memberDto);
 
         return "redirect:/";
     }
 
     //로그인 페이지 요청
     @GetMapping("/signIn")
-    public String loginPage(Model model){
+    public String 로그인페이지(Model model){
         model.addAttribute("memberLoginDto", new MemberLoginDto());
-
         return "member/signIn";
     }
 
     // 로그인 요청
     @PostMapping("/signIn")
-    public String login(MemberLoginDto memberLoginDto, HttpSession session){
+    public String 로그인(MemberLoginDto memberLoginDto ,
+                      HttpSession session){
 
-        memberService.login(memberLoginDto);
-        session.setAttribute("user", memberLoginDto.getUserId());
+        memberService.로그인처리(memberLoginDto);
+
+        session.setAttribute("user", memberLoginDto.getUserId() );
+
         return "redirect:/";
     }
 
     //회원정보수정 페이지 요청
     @GetMapping("/modify")
-    public String modify(@RequestParam("id")int id, Model model, HttpSession session){
+    public String 회원수정(Model model, HttpSession session){
         String userId = (String)session.getAttribute("user");
-        MemberDto memberDto = memberService.getMember(userId);
-        model.addAttribute("memberDto", memberDto);
+        MemberDto memberDto = memberService.회원정보얻기(userId);
+        model.addAttribute("memberDto",memberDto );
 
         return "member/signUp";
     }
 }
-
-
