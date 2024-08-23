@@ -1,4 +1,4 @@
-package com.security.control;
+package com.security.Control;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.security.Dto.MemberDto;
@@ -25,6 +25,19 @@ public class MainControl {
 
     private final PasswordEncoder passwordEncoder;
 
+
+    @GetMapping("/guestHome")
+    public String guest(){
+        return "guest";
+    }
+    @GetMapping("/userHome")
+    public String user(){
+        return "user";
+    }
+    @GetMapping("/adminHome")
+    public String admin(){
+        return "admin";
+    }
 
     @GetMapping("/")
     public String home(){

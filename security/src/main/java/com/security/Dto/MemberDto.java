@@ -1,5 +1,6 @@
 package com.security.Dto;
 
+import com.security.Constant.Role;
 import com.security.Entity.Member;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +31,7 @@ public class MemberDto {
         String pw = passwordEncoder.encode(this.password);
         member.setPassword(pw);
         member.setUserId(this.userId);  // id -> userId로 수정해야 함
-
+        member.setRole(Role.USER);
         return member;
     }
 

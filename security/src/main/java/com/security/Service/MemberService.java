@@ -37,7 +37,8 @@ public class MemberService implements UserDetailsService {
         }
         return User.builder().username(member.getUserId())
                 .password(member.getPassword())
-                .roles("USER")  //이게 인가와 관련된 역할임.
+                .roles(member.getRole().toString())
+                    //이걸 설정해주면 Enum값의 User Admin 중 하나로 지정해준다.
                 .build();
     }
         //이게 db의 아이디와 패스워드를 비교하여 로그인 처리를 진행함

@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -24,8 +25,13 @@ public class SecurityConfig {
         //      정상적인 경로로 요청이 이루어지게 하기 위한 스프링 시큐리티에서 제공하는 값
         //      disable = 토큰 사용하지 않겠다는 선언
 
-        http.authorizeRequests()
+        http.authorizeRequests()    //얘가 인가규칙
+                .mvcMatchers("/guestHome").permitAll()
+                .mvcMatchers("/css/**", "/js/**","/image/**").permitAll()
+                    //이렇게 해야 css, js, 이미지 등이 비회원에게도 보여지게 된다.
                 .mvcMatchers("/signUp").permitAll() //signUp 주소는 인증없어도 허용
+                .mvcMatchers("/adminHome").hasRole("ADMIN")
+                    //Enum에서 설정한 ADMIN만 접속 가능하도록 인가
                 .anyRequest().authenticated();
 
             //.authorizeRequests() : 인가 규칙  =
@@ -38,11 +44,13 @@ public class SecurityConfig {
                 .passwordParameter("pw")    //login.html의 비번 입력 태그
                 .permitAll()    //로그인 성공시 모든 권한을 줄 것
                 .and()
-                        .logout().logoutUrl("/logout")  //로그아웃시 /logout 주소로 이동되도록 요청
-                .logoutSuccessUrl("/")  //로그아웃 성공시 이동할 주소
-                .invalidateHttpSession(true)    //로그인 성공으로 얻은 세션 제거
+                        .logout()
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                //.logoutUrl("/logout")  //로그아웃시 /logout 주소로 이동되도록 요청
+                        .logoutSuccessUrl("/")  //로그아웃 성공시 이동할 주소
+                                 //.invalidateHttpSession(true)    //로그인 성공으로 얻은 세션 제거
                 .permitAll();
-        http.csrf().disable();
+//        http.csrf().disable();
         return http.build();
     }
 

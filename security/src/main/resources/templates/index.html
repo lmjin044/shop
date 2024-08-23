@@ -1,17 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th ="http://www.thymeleaf.org">
+<html lang="en" xmlns:th ="http://www.thymeleaf.org"
+xmlns:sec="http.//www.thymeleaf.org/extras/spring-sequrity">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<link rel="stylesheet" href="/css/init.css">
 <body>
     <h1>스프링 시큐리티</h1>
-    <div th:if="${session.user==null}">
+    <div id="anonymous" sec:authorize = "isAnonymous()">
         <a href="/signUp">회원가입</a>
         <a href="/signIn">로그인</a>
     </div>
-    <div th:if="${session.user != null}">
+
+    <div  sec:authorize = "isAuthenticated()">
+        <a href="/logout">로그아웃</a>
+    </div>
+
+    <div id= "user">
         <a href="/userHome">유저페이지 이동</a>
+    </div>
+
+    <div>
+        <a href="/guestHome">게스트페이지 이동</a>
+    </div>
+
+    <div>
+        <a href="/adminHome">관리자페이지 이동</a>
     </div>
 </body>
 </html>
+
+<!--
+isAnonymous() : 아무나 접속 가능 = 그러나 인증받은 사람에게 보이진 않음
+isAuthenticated() : 인증된 사람만 가능
+
+-->
