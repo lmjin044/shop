@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http.//www.thymeleaf.org/extras/spring-sequrity">
+<head>
+    <meta charset="UTF-8">
+    <title>메인 화면</title>
+    <link rel="stylesheet" href="/css/init.css">
+</head>
+<body>
+  <div id="wrap">
+        <div class="menu">HOME</div>
+        <div class="menu">티셔츠</div>
+        <div class="menu">신발</div>
+        <div class="menu">바지</div>
+        <div class="menu" sec:authorize="isAnonymous()">
+            <a href ="/login">로그인</a>
+            <a href ="/signUp">회원가입</a>
+        </div>
+        <div class="menu" sec:authorize="isAuthenticated()">
+            <a href="/logout">로그아웃</a>
+            <a href="/adminHome"><img class="hiddenAdmin" src="https://loremflickr.com/50/50/cloth?random=1"></a>
+        </div>
+  </div>
+</body>
+</html>
