@@ -20,6 +20,7 @@ a{
     top:0;
     background: #fff;
     border-bottom: 1px solid #bbb;
+    z-index:100;
 }
 #nav{
     display: flex;
@@ -64,12 +65,15 @@ a{
 #nav .navbar-menu .nav-item:hover .navbar-sub{
     position:absolute;
     top:30px;
+    border-bottom-left-radius:10px;
+    border-bottom-right-radius:10px;
 }
 #nav .navbar-menu .nav-item:hover  .navbar-sub .sub-item{
     position:relative;
     opacity: 1;
     line-height: 30px;
     width:100px;
+    padding-left:10px;
 }
 
 .searchBox{
@@ -147,7 +151,7 @@ a{
         background: #fff;
     }
     #Mnav .m-menu-item{
-        background:#008b8b;
+        background:#53a2fb;
         border-bottom:1px solid #ddd;
         color:#fff;
     }
@@ -157,7 +161,7 @@ a{
     #Mnav .m-menu-sub{ display:none;}
     #Mnav .m-menu-sub a{
         display:block;
-        background:#48d1cc;
+        background:#f77e7e;
         color:#fff;
         padding:4px 50px;
     }
