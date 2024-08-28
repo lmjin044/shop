@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Item {
+public class Item extends Base{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="item_id")
