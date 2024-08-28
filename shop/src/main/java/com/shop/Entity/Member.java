@@ -32,6 +32,4 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    private LocalDateTime regTime;
-    private LocalDateTime updateTime;
 }

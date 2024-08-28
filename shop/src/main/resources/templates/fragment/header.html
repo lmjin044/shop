@@ -93,9 +93,18 @@
                 <input type="text" name="keyword" id="keyword">
                 <i class="bi bi-search"></i>
             </div>
-            <div class="signInBox">
+
+            <div class="signInBox" sec:authorize="isAnonymous()">
                 <a href="/member/signIn"><i class="bi bi-person"></i></a>
             </div>
+
+            <div class="sign" sec:authorize="isAuthenticated()">
+                <span class="user-id" sec:authentication="name"></span>
+                <a href="/member/logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+
             <div class="orderBox">
                 <a href=""><i class="bi bi-bag"></i></a>
             </div>

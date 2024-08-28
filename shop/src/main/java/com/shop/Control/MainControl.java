@@ -12,4 +12,10 @@ public class MainControl {
         return "index";
     }
 
+    @GetMapping("/admin")
+    public String adminHome(Model model){
+
+        return "admin/index";
+    }
+
 }

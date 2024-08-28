@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -15,6 +17,11 @@ public class SecurityConfig {
     @Autowired
     MemberService memberService;
     //로그인에 필요한 절차라서 필요함.
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -38,6 +45,7 @@ public class SecurityConfig {
                 .mvcMatchers("/","/member/**").permitAll()
                 .mvcMatchers("/css/**", "/js/**", "/image/**").permitAll()
                 //첫 페이지 주소, member아래 이어지는 주소, css와 js, 이미지 파일을 회원 관계없이 전부 허용
+                .mvcMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
 

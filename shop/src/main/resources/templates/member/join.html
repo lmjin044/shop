@@ -114,6 +114,7 @@
 
     <div id="joinForm">
       <form method="post" action="/member/signUp" th:object="${memberForm}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <div class="formData">
 
           <div class="inputField">

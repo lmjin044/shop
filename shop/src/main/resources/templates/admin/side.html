@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="side" id="side">
+
+    <div id="menuList">
+        <ul class="menuBox">
+            <li class="menu active">
+                <a href="/admin">
+                    <i class="fa-solid fa-house"></i>
+                    MAIN
+                </a>
+            </li>
+            <li class="menu">
+                <a href="/admin/new">
+                    <i class="fa-solid fa-shirt"></i>
+                    상품등록
+                </a>
+            </li>
+            <li class="menu">
+                <a href="">
+                    <i class="fa-solid fa-gear"></i>
+                    상품관리
+                </a>
+            </li>
+            <li class="menu">
+                <a href="">
+                    <i class="fa-solid fa-coins"></i>
+                    판매현황
+                </a>
+            </li>
+            <li class="menu">
+                <a href="">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    문의
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="bottom">
+        <a href="/member/logout"><i class="fa-solid fa-person-through-window"></i></a>
+        <b>made By</b>
+    </div>
+
+</div>
+
+</html>

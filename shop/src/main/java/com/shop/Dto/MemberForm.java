@@ -1,9 +1,11 @@
 package com.shop.Dto;
 
+import com.shop.Constant.Role;
 import com.shop.Entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -27,16 +29,19 @@ public class MemberForm {
     private int zipCode;  // 우편번호
 
     //DTO > Entity
-    public Member createEntity(){
+    public Member createEntity(PasswordEncoder passwordEncoder){
         Member member = new Member();
         member.setName(this.name);
         member.setEmail(this.email);
         member.setUserId(this.userId);
-        member.setPassword(this.password);
+
         member.setZipCode(this.zipCode);
         member.setAddr1(this.addr1);
         member.setAddr2(this.addr2);
+        member.setRole(Role.USER);  //회원가입시 기본적으로 USER로 설정
 
+        String pw=passwordEncoder.encode(this.password);    //password에 저장된 복호화내용을 그대로 받는다.
+        member.setPassword(pw); //그 복호화된 암호를 db에 비밀번호로 등록한다.
         return member;
     }
 
