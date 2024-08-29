@@ -1,18 +1,62 @@
-<!--템플릿.html : 용도 나중에 필요하면 이거 복사해서 쓸거임-->
-
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragment/main}"
->
+      layout:decorate="~{fragment/main}">
 <head>
     <meta charset="UTF-8">
     <title layout:fragment="title"></title>
 
     <th:block layout:fragment="css"></th:block>
-    <th:block layout:fragmnet="script"></th:block>
+    <th:block layout:fragment="script"></th:block>
 </head>
-<body>
-<div layout:fragment="main" id="main"></div>
-</body>
+<div layout:fragment="main" id="main">
+    <div id="slideWrap">
+        <div id="carouselExampleCaptions" class="carousel slide">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            </div>
+            <div class="carousel-inner">
+
+                <div style="height:50vw;" class="carousel-item" th:each="row, stat : ${slideImg}" th:classappend="${stat.index==0 ? 'active': ''}">
+                    <img th:src="${row.imgUrl}"  class="d-block w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 th:text="'#'+${row.id}"></h5>
+                        <p th:text="${row.itemName}"></p>
+                    </div>
+                </div>
+
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+
+    <div id="itemCard">
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+
+            <div class="col" th:each="item : ${itemList}">
+                <div class="card">
+                    <img th:src="${item.itemImgDtoList.get(0).imgUrl}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${item.itemName}"></h5>
+                        <p class="card-text" th:text="${item.price}"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
 </html>

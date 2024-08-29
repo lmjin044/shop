@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -47,7 +44,14 @@ public class AdminController {
                     "상품 등록중 문제가 발생 하였습니다.");
             return "admin/itemForm";
         }
-
         return "redirect:/admin";
     }
+
+    //상품수정 페이지
+    @GetMapping("update/{id}")
+    public String updatePage(@PathVariable Long id, Model model){
+        model.addAttribute("itemForm", itemService.getItem(id));
+        return "admin/itemForm";
+    }
+
 }

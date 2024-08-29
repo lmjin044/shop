@@ -6,6 +6,28 @@ layout:decorate="~{admin/layout}">
     <th:block layout:fragment="script"></th:block>
 
     <div layout:fragment="body">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">상품정보</th>
+                <th scope="col">카테고리</th>
+                <th scope="col">가격</th>
+                <th scope="col">재고수량</th>
+                <th scope="col">비고</th>
 
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${itemFormList}">
+                <th scope="row" th:text="${row.id}"></th>
+                <td th:text="${row.itemName}"></td>
+                <td th:text="${row.itemCategory}"></td>
+                <td th:text="${row.price}"></td>
+                <td th:text="${row.stock}"></td>
+                <td><a href="'/admin/update/'+${row.id}">수정</a></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </html>

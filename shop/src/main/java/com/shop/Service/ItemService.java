@@ -1,16 +1,21 @@
 package com.shop.Service;
 
 import com.shop.Dto.ItemForm;
+import com.shop.Dto.ItemImgDto;
+import com.shop.Dto.MainSlideImg;
 import com.shop.Entity.Item;
 import com.shop.Entity.ItemImg;
 import com.shop.Repository.ItemImgRepository;
 import com.shop.Repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +26,27 @@ public class ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
 
+    // 랜덤하게 상품 4개 선택 - 상품번호,상품명,상품대표이미지
+    public List<MainSlideImg> getSlideImg(){
+        List<MainSlideImg> mainSlideImgList = new ArrayList<>();
+        // 전체 상품 중 랜덤하게 4개 뽑기
+        List<Item> itemList = itemRepository.findRandomItem(4);
+        // 랜덤 4개 상품의 대표이미지 가져오기
+        for( Item item : itemList){
+            MainSlideImg mainSlideImg = new MainSlideImg();
+            ItemImg itemImg = itemImgRepository.findByItemIdAndRepImgYn(item.getId(), "Y");
+
+            mainSlideImg.setId( item.getId() ); // 상품번호
+            mainSlideImg.setItemName( item.getItemName() ); // 상품명
+            mainSlideImg.setImgUrl( itemImg.getImgUrl() ); // 상품 이미지
+            mainSlideImgList.add( mainSlideImg );
+        }
+
+        return mainSlideImgList;
+    }
+
+
+    // 상품 저장
     public void saveItem(ItemForm itemForm, List<MultipartFile> multipartFileList) throws Exception {
         Item item = itemForm.createEntity();
         itemRepository.save(item);  // 상품명, 가격, 재고량, 설명을 테이블에 저장
@@ -37,4 +63,54 @@ public class ItemService {
             itemImgService.saveItemImg( itemImg, multipartFileList.get(i) );
         }
     }
+
+
+    // 관리자 페이지 메인 상품 목록
+    public List<ItemForm> getAdminItemPage() {
+        List<Item> itemList = itemRepository.findAll();
+        List<ItemForm> itemFormList= new ArrayList<>();
+        for(Item item : itemList){
+            itemFormList.add(ItemForm.of(item));
+        }
+
+        return itemFormList;
+    }
+
+    // 상품 정보 가져오기
+    public ItemForm getItem(Long id) {
+        Item item = itemRepository.findById( id ).orElse(null);
+        if( item == null){
+            return new ItemForm();
+        }
+        return ItemForm.of(item);
+    }
+
+    // 메인페이지 보여줄 상품 8개 선택하기위한 메서드
+    public List<ItemForm> getMainItems() {
+        List<ItemForm> itemFormList = new ArrayList<>();
+
+        //최근 등록된상품 8개 가져오기 - query문 만들어서 하는방법과, 메서드로 하는방법
+        Pageable pageable = PageRequest.of(0,8);
+        List<Item> itemList = itemRepository.findAllByOrderByRegTimeDesc( pageable );
+
+        for( Item item : itemList){
+            ItemForm itemForm= getItem(item);
+            itemFormList.add(itemForm);
+        }
+        return itemFormList;
+    }
+    // 메인페이지와 상품상세 페이지에 사용되는 내용
+    private ItemForm getItem(Item item){
+        List<ItemImg> itemImgList =
+                itemImgRepository.findByItemIdOrderByIdAsc(item.getId());
+        List<ItemImgDto> itemImgDtos = new ArrayList<>();
+        for( ItemImg itemImg : itemImgList){
+            itemImgDtos.add(  ItemImgDto.of(itemImg)); // 이미지 entity -> DTO
+        }
+        ItemForm itemForm = ItemForm.of(item);
+        itemForm.setItemImgDtoList( itemImgDtos ); // 이미지리스트 상품Dto에저장
+        return itemForm;
+    }
+
+
 }
