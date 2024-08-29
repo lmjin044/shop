@@ -3,7 +3,16 @@
       layout:decorate="~{admin/layout}">
 
 <th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(function(){
+            var errorMsg = [[${errorMsg}]];
+            if(errorMsg != null){
+                alert(errorMsg);
+            }
+        });
+    </script>
+</th:block>
 
 
 
@@ -55,11 +64,11 @@
         </div>
         <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="error"></p>
 
-        <div th:if="${#lists.isEmpty(itemForm.itemImgDtos)}">
+        <div th:if="${#lists.isEmpty(itemForm.itemImgDtoList)}">
             <!--최대 5장까지 업로드 가능하게-->
             <div class="input-group mb-3" th:each="num : ${#numbers.sequence(1,5)}">
                 <label class="input-group-text" th:text="이미지+${num}"></label>
-                <input type="file" class="form-control" id="itemImgFile">
+                <input type="file" class="form-control" name="itemImgFile">
             </div>
         </div>
 

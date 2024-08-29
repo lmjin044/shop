@@ -6,8 +6,8 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Getter
 @Setter
+@Getter
 public class ItemImg extends Base{
     @Id
     @Column(name="item_img_id")
@@ -16,7 +16,7 @@ public class ItemImg extends Base{
     private String imgName;
     private String imgUrl;
     private String originalName;
-    private String regImgYn;
+    private String repImgYn;
 
     @ManyToOne
     @JoinColumn(name="item_id")
