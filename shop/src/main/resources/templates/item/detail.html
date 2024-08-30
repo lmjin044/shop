@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/main}">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <title layout:fragment="title"></title>
+
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" href="/css/detail.css">
+    </th:block>
+    <th:block layout:fragment="script">
+        <script src="/js/detail.js"></script>
+        <script th:inline="javascript">
+            function addCart(){ //장바구니에 담기
+                var url="/cart"; // 장바구니에 담기 위한 주소
+                var paramData = {  // 장바구니에 담기 위해 서버에 전달할 데이터객체
+                    itemId : $("#itemId").val(),
+                    quantity : $("#quantity").val()
+                }
+                var param = JSON.stringify(paramData); // JSON 으로 변환
+                var token = $("meta[name='_csrf']").attr("content");
+                var header = $("meta[name='_csrf_header']").attr("content");
+
+                $.ajax({
+                    url : url,
+                    type : "POST",
+                    data : param,
+                    contentType : "application/json",
+                    dataType : "json",
+                    beforeSend : function(xhr){
+                        xhr.setRequestHeader( header, token); // 전송전에 헤더에 csrf설정
+                    },
+                    cache : false ,
+                    success : function( result, status){ // 전송 성공시
+                        alert("상품을 장바구니에 담았습니다.");
+                    },
+                    error : function( jqXHR , status, error){ // 전송 실패시
+                        if( jqXHR.status == "200"){
+                            alert("로그인 후 이용하세요");
+                        }else{
+                            alert( jqXHR.responseText );
+                        }
+                    }
+                });
+
+            }
+
+            function addOrder(){ // 즉시 주문하기
+
+            }
+
+        </script>
+    </th:block>
+</head>
+<div layout:fragment="main" id="main">
+
+    <input type="hidden" id="itemId" th:value="${item.id}">
+
+    <div id="detailWrap">
+        <div id="detailTop">
+            <div id="top-left">
+                <div class="bigImgWrap">
+                    <div class="bigImg">
+                        <img th:src="${item.itemImgDtoList.get(0).imgUrl}">
+                    </div>
+                </div>
+                <div class="smallImgsWrap">
+                    <ul>
+                        <li th:each="img : ${item.itemImgDtoList}"
+                            th:if="${img.imgUrl != null and img.imgUrl.trim().length() > 0}">
+                            <img th:src="${img.imgUrl}">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="top-right">
+                <div class="itemValue">
+                    <h2 class="itemName" th:text="${item.itemName}"></h2>
+                    <div th:data-price="${item.price}" class="itemMoney" th:text="${#numbers.formatInteger(item.price,0,'COMMA') + ' 원'}"></div>
+                    <div class="purchase">
+                        <div class="quantity-selector">
+                            <label for="quantity">수량:</label>
+                            <input type="number" id="quantity" value="1" min="1">
+                        </div>
+                        <div class="total-price">
+                            <p>결제 금액: <span id="totalPrice"></span></p>
+                        </div>
+                    </div>
+                    <div class="itemBtn">
+                        <button class="cart-button" type="button" onclick="addCart()">CART</button>
+                        <button class="order-button" type="button" onclick="addOrder()">ORDER</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="detailBody">
+            <div class="item_comment">
+                <pre th:text="${item.itemDetail}"></pre>
+            </div>
+            <div class="item_imgs">
+                <img th:each="img : ${item.itemImgDtoList}"
+                     th:if="${img.imgUrl != null and img.imgUrl.trim().length() > 0}"
+                     th:src="${img.imgUrl}">
+            </div>
+        </div>
+    </div>
+</div>
+</html>

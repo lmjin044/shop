@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/main}"
+>
+<head>
+  <meta charset="UTF-8">
+  <title layout:fragment="title"></title>
+
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/itemList.css">
+  </th:block>
+  <th:block layout:fragmnet="script"></th:block>
+</head>
+
+  <div layout:fragment="main" id="main">
+
+    <div id="container">
+
+      <div class="shop_item" th:each="item : ${itemList}">
+
+        <div class="card_box">
+
+          <a th:href="'/item/detail/'+${item.id}">
+            <div class="item_img"
+            th:style="'background:url('+ ${item.itemImgDtoList.get(0).imgUrl + ') no-repeat center;
+            background-size:cover;'}"></div>
+            <div class="item_value">
+              <p class="item_name" th:text="${item.itemName}"></p>
+              <p class="item_money" th:text="${'\' + #numbers.formatInteger(item.price, 8, 'COMMA')}"></p>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</html>

@@ -7,7 +7,7 @@
         <div class="logo"></div>
         <ul class="navbar-menu">
             <li class="nav-item">
-                <a href="">바지</a>
+                <a href="/item/PANTS">바지</a>
                 <ul class="navbar-sub">
                     <li class="sub-item"><a href="">청바지</a></li>
                     <li class="sub-item"><a href="">슬랙스</a></li>
@@ -17,7 +17,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="">상의</a>
+                <a href="/item/TOP">상의</a>
                 <ul class="navbar-sub">
                     <li class="sub-item"><a href="">티셔츠</a></li>
                     <li class="sub-item"><a href="">맨투맨/후드</a></li>
@@ -27,7 +27,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="">아우터</a>
+                <a href="/item/OUTER">아우터</a>
                 <ul class="navbar-sub">
                     <li class="sub-item"><a href="">코트</a></li>
                     <li class="sub-item"><a href="">패팅</a></li>
@@ -37,7 +37,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a href="">신발</a>
+                <a href="/item/SHOES">신발</a>
                 <ul class="navbar-sub">
                     <li class="sub-item"><a href="">러닝화</a></li>
                     <li class="sub-item"><a href="">구두</a></li>
@@ -105,8 +105,14 @@
                 </a>
             </div>
 
-            <div class="orderBox">
-                <a href=""><i class="bi bi-bag"></i></a>
+            <!--관리자에게만 노출-->
+            <div class="orderBox" sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/admin">관리자페이지</a>
+            </div>
+
+            <!--게스트와 유저에게만 노출-->
+            <div class="orderBox" sec:authorize="isAnonymous() or hasRole('ROLE_USER')">
+                <a href="/cart/list"><i class="bi bi-bag"></i></a>
             </div>
         </div>
     </div>

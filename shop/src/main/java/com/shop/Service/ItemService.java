@@ -1,5 +1,6 @@
 package com.shop.Service;
 
+import com.shop.Constant.ItemCategory;
 import com.shop.Dto.ItemForm;
 import com.shop.Dto.ItemImgDto;
 import com.shop.Dto.MainSlideImg;
@@ -10,6 +11,7 @@ import com.shop.Repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,7 @@ public class ItemService {
     private final ItemImgService itemImgService;
     private final ItemImgRepository itemImgRepository;
 
-    // 랜덤하게 상품 4개 선택 - 상품번호,상품명,상품대표이미지
+    // 랜덤하게 상품 4개 선택 - 상품번호, 상품명, 상품대표이미지
     public List<MainSlideImg> getSlideImg(){
         List<MainSlideImg> mainSlideImgList = new ArrayList<>();
         // 전체 상품 중 랜덤하게 4개 뽑기
@@ -82,7 +84,8 @@ public class ItemService {
         if( item == null){
             return new ItemForm();
         }
-        return ItemForm.of(item);
+        ItemForm itemForm = getItem(item);
+        return itemForm;
     }
 
     // 메인페이지 보여줄 상품 8개 선택하기위한 메서드
@@ -113,4 +116,20 @@ public class ItemService {
     }
 
 
+    public List<ItemForm> getItemList(String category) {
+        List<ItemForm> itemFormList = new ArrayList<>();
+        ItemCategory itemCategory=ItemCategory.valueOf(category);
+            //valueOf = enum의 값을 상수로 변환
+            //단 일치했을 때만 정상적으로 동작하고 불일치할 경우 예외가 발생
+        List<Item> itemList = itemRepository.findByItemCategory(itemCategory);
+
+        for(Item item : itemList){
+            ItemForm itemForm = getItem(item);
+            itemFormList.add(itemForm);
+                //각 상품들의 이미지를 LIST에 담고 itemForm에 저장
+                //itemForm에 저장된 객체들은 List<ItemForm>에 저장
+        }
+
+        return itemFormList;
+    }
 }
