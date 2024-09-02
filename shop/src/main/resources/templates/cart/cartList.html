@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragment/main}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <title layout:fragment="title"></title>
+
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" href="/css/cart.css">
+    </th:block>
+    <th:block layout:fragment="script">
+        <script src="/js/cart.js"></script>
+    </th:block>
+</head>
+<div layout:fragment="main" id="main">
+
+    <h2>장바구니</h2>
+    <div id="cartList">
+        <table id="cartTable">
+            <thead>
+            <tr>
+                <th>선택</th>
+                <th>상품 이미지</th>
+                <th>상품 이름</th>
+                <th>단가</th>
+                <th>수량</th>
+                <th>합계</th>
+                <th>삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cartList}">
+                <td>
+                    <input type="checkbox" name="cartChk" th:value="${item.cartItemId}" class="itemCheckbox" checked>
+                </td>
+                <td><img th:src="${item.imgUrl}" ></td>
+                <td th:text="${item.itemName}"></td>
+                <td class="price" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA')}+'원'"></td>
+                <td class="quantity">
+                    <input type="number" min="1" th:value="${item.count}">
+                </td>
+                <td class="subtotal"></td>
+                <td><button class="removeButton">삭제</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="cartTotal">
+            <p>총 결제 금액: <span id="totalPrice">0원</span></p>
+            <button id="checkoutButton">결제하기</button>
+        </div>
+    </div>
+
+
+</div>
+</html>

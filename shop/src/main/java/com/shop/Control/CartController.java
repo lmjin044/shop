@@ -1,25 +1,71 @@
 package com.shop.Control;
 
 import com.shop.Dto.CartItemDto;
+import com.shop.Dto.CartListDto;
+import com.shop.Dto.CartOrderDto;
 import com.shop.Service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+
+    //장바구니에서 상품 주문 = 결제하기 버튼 클릭하기
+    @PostMapping("/cart/order")
+    public @ResponseBody ResponseEntity orderCartItem(
+            @RequestBody CartOrderDto cartOrderDto, Principal principal){
+        Long orderId = cartService.orderCartItem(cartOrderDto.getCartOrderDtoList(),
+                principal.getName());
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
+
+    //장바구니 목록에서 상품 삭제하기
+    @DeleteMapping("/cart/delete/{cartItemId}")
+    public @ResponseBody ResponseEntity deleteCartItem(
+            @PathVariable("cartItemId") Long cartItemId){
+        try{
+            cartService.deleteCartItem(cartItemId);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
+    }
+
+
+    //수량변경 요청
+    @PatchMapping("/cart/update/{cartItemId}")
+    public @ResponseBody ResponseEntity updateCartItem(
+            @PathVariable("cartItemId") Long cartItemId,
+            @RequestParam("quantity") int quantity, Principal principal){
+        cartService.updateCartItemQuantity(cartItemId, quantity, principal.getName());
+
+        return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
+    }
+
+
+    //장바구니 아이콘 클릭 시 = 내 장바구니 목록 보기
+    @GetMapping("/cart/list")
+    public String cartList(Model model, Principal principal){
+        //스프링 시큐리티 사용 시 현재 로그인 한 계정명은 Pricipal을 통해 받아올 수 있음
+        List<CartListDto> cartListDtoList = cartService.getCartList(principal.getName());
+            //현재 장바구니에 담은, 로그인 사람 계정명만을 받아오도록 한다.
+        model.addAttribute("cartList", cartListDtoList);
+
+        return "cart/cartList";
+    }
 
     //장바구니 버튼 클릭시 json 값 받기
     @PostMapping("/cart")
