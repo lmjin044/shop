@@ -16,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,6 @@ public class CartService {
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
     private final OrderService orderService;
-
 
     //장바구니 - CART 버튼 클릭시 - 장바구니 담기
     public Long addCart(CartItemDto cartItemDto, String userId){
@@ -79,28 +80,44 @@ public class CartService {
         return cartListDtoList;
     }
 
+    // 수량 변경 요청
     public void updateCartItemQuantity(Long cartItemId, int quantity, String name) {
         CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-        cartItem.updateQuantity(quantity);
+        cartItem.updateQuantity( quantity);
+
     }
 
-    //장바구니 목록에서 상품 삭제하기 위한 메서드 = 테이블에서 제거하기
+    // 장바구니 목록에서 상품을 삭제 하기 위한 메서드 - 테이블에서 제거
+    @Transactional
     public void deleteCartItem(Long cartItemId) {
-        CartItem cartItem = cartItemRepository.findById(cartItemId).get();
-        cartItemRepository.delete(cartItem);
+        Optional<CartItem> optionalItem = cartItemRepository.findById(cartItemId);
+        if (optionalItem.isPresent()) {
+            CartItem item = optionalItem.get();
+            cartItemRepository.deleteById(cartItemId);
+        }
     }
 
+
+    // 장바구니에서 선택한 상품 주문하기
     public Long orderCartItem(List<CartOrderDto> cartOrderDtoList, String name) {
         List<OrderDto> orderDtos = new ArrayList<>();
-        for(CartOrderDto cartOrderDto : cartOrderDtoList){
-            CartItem cartItem = cartRepository.findById(cartOrderDto.getCartItemId()).get();
+        //선택한 상품을 구매내역에 저장하기 위해 OrderDto에 저장한다.
+        for( CartOrderDto cartOrderDto : cartOrderDtoList){
+            CartItem cartItem =
+                    cartItemRepository.findById(cartOrderDto.getCartItemId()).get();
+            OrderDto orderDto =new OrderDto();
+            orderDto.setItemId(cartItem.getItem().getId());
+            orderDto.setQuantity( cartItem.getQuantity() );
+            orderDtos.add(orderDto);
         }
-        OrderDto orderDto = new OrderDto();
-        orderDto.setItemId(cartItem.getItem().getId());
-        orderDto.setQuantity(cartItem.getQunatity());
-        orederDtos.add(orderDto);
-
+        // 선택한 상품들을 구매내역 테이블에 저장하기
+        Long orderId = orderService.orders(orderDtos, name);
+        // 장바구니 상품을 구매하였으니까 장바구니에서는 삭제
+        for( CartOrderDto cartOrderDto : cartOrderDtoList){
+            CartItem cartItem =
+                    cartItemRepository.findById( cartOrderDto.getCartItemId()).get();
+            cartItemRepository.delete(cartItem);
+        }
+        return orderId;
     }
-
-
 }

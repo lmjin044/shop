@@ -23,7 +23,7 @@ public class Order extends Base{
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
-    private LocalDateTime orderDateTime;
+    private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -46,7 +46,7 @@ public class Order extends Base{
             order.addOrderItem(orderItem);
         }
         order.setOrderStatus(OrderStatus.ORDER);
-        order.setOrderDateTime(LocalDateTime.now());
+        order.setOrderDate(LocalDateTime.now());
         return order;
     }
 
